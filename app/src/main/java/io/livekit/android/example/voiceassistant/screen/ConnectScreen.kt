@@ -73,7 +73,7 @@ fun ConnectScreen(
             Spacer(Modifier.size(16.dp))
             Text(
                 text = buildAnnotatedString {
-                    append("准备就绪，点击下方按钮开始通话\n与您的机器女朋聊天\n")
+                    append("准备就绪，点击下方按钮开始通话\n与您的机器女友聊天\n")
                     withLink(
                         LinkAnnotation.Url(
                             "#",
