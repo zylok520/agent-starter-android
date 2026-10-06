@@ -44,6 +44,7 @@ import io.livekit.android.example.voiceassistant.homepageAgentEndpoint
 import io.livekit.android.example.voiceassistant.tokenServerId
 import io.livekit.android.example.voiceassistant.ui.theme.Blue500
 import kotlinx.serialization.Serializable
+import androidx.compose.ui.layout.ContentScale
 
 @Serializable
 object ConnectRoute
@@ -60,15 +61,22 @@ fun ConnectScreen(
     ) {
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Image(painter = painterResource(R.drawable.connect_icon), contentDescription = "Connect icon")
+            Image(
+				painter = painterResource(R.drawable.customer_service),
+				contentDescription = "语音客服",
+				contentScale = ContentScale.Fit,
+				modifier = Modifier
+					.fillMaxWidth(0.75f)
+					.size(height = 300.dp, width = 300.dp)
+			)
 
             Spacer(Modifier.size(16.dp))
             Text(
                 text = buildAnnotatedString {
-                    append("Start a call to chat with your voice agent. Need help getting set up?\nCheck out the ")
+                    append("准备就绪，点击下方按钮开始开始通话，\n与您的语音助手聊天 ")
                     withLink(
                         LinkAnnotation.Url(
-                            "https://docs.livekit.io/agents/start/voice-ai/",
+                            "#",
                             TextLinkStyles(style = SpanStyle(textDecoration = TextDecoration.Underline))
                         )
                     ) {
@@ -86,7 +94,7 @@ fun ConnectScreen(
 
             AnimatedVisibility(hasError) {
                 Text(
-                    text = "Error connecting. Make sure your agent is properly configured and try again.",
+                    text = "连接错误。确保您的配置正确，然后重试。",
                     color = Color.Red,
                     fontSize = 12.sp,
                     textAlign = TextAlign.Center,
@@ -96,45 +104,52 @@ fun ConnectScreen(
 
             Spacer(Modifier.size(24.dp))
 
-            val buttonColors = ButtonDefaults.buttonColors(
-                containerColor = Blue500,
-                contentColor = Color.White
-            )
-            Button(
-                colors = buttonColors,
-                shape = RoundedCornerShape(20),
-                onClick = {
-                    // Token source details from TokenExt.kt
-                    val route = VoiceAssistantRoute(
-                        tokenServerId = tokenServerId,
-                        hardcodedUrl = hardcodedUrl,
-                        hardcodedToken = hardcodedToken,
-                        homepageAgentEndpoint = homepageAgentEndpoint
-                    )
-                    navigateToVoiceAssistant(route)
-                }
-            ) {
+			val buttonColors = ButtonDefaults.buttonColors(
+				containerColor = Color(0xFF34C759), // 拨号绿色
+				contentColor = Color.White
+			)
 
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    AnimatedVisibility(isConnecting) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(20.dp),
-                                color = Color.White,
-                                trackColor = Color.Gray,
-                            )
-                            Spacer(Modifier.size(8.dp))
-                        }
-                    }
-                    Text(
-                        text = if (isConnecting) "CONNECTING" else "START CALL",
-                        style = TextStyle(
-                            fontFamily = FontFamily.Monospace,
-                            letterSpacing = 2.sp,
-                        )
-                    )
-                }
-            }
+			Button(
+				colors = buttonColors,
+				shape = RoundedCornerShape(30.dp),
+				modifier = Modifier
+					.fillMaxWidth(0.55f)
+					.size(height = 60.dp, width = 220.dp),
+				onClick = {
+					val route = VoiceAssistantRoute(
+						tokenServerId = tokenServerId,
+						hardcodedUrl = hardcodedUrl,
+						hardcodedToken = hardcodedToken,
+						homepageAgentEndpoint = homepageAgentEndpoint
+					)
+					navigateToVoiceAssistant(route)
+				}
+			) {
+				Row(
+					verticalAlignment = Alignment.CenterVertically
+				) {
+					AnimatedVisibility(isConnecting) {
+						Row(verticalAlignment = Alignment.CenterVertically) {
+							CircularProgressIndicator(
+								modifier = Modifier.size(24.dp),
+								color = Color.White,
+								trackColor = Color.White.copy(alpha = 0.3f),
+								strokeWidth = 2.dp
+							)
+							Spacer(Modifier.size(10.dp))
+						}
+					}
+
+					Text(
+						text = if (isConnecting) "拨通中..." else "拨打",
+						style = TextStyle(
+							fontFamily = FontFamily.Monospace,
+							fontSize = 18.sp,
+							letterSpacing = 2.sp
+						)
+					)
+				}
+			}
         }
     }
 }
