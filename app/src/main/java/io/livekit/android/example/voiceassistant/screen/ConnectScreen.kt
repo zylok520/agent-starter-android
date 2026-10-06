@@ -73,14 +73,14 @@ fun ConnectScreen(
             Spacer(Modifier.size(16.dp))
             Text(
                 text = buildAnnotatedString {
-                    append("准备就绪，点击下方按钮开始开始通话，\n与您的语音助手聊天 ")
+                    append("准备就绪，点击下方按钮开始通话\n与您的机器女朋聊天\n")
                     withLink(
                         LinkAnnotation.Url(
                             "#",
                             TextLinkStyles(style = SpanStyle(textDecoration = TextDecoration.Underline))
                         )
                     ) {
-                        append("Voice AI quickstart.")
+                        append("")
                     }
                 },
                 textAlign = TextAlign.Center,
@@ -141,7 +141,7 @@ fun ConnectScreen(
 					}
 
 					Text(
-						text = if (isConnecting) "拨通中..." else "拨打",
+						text = if (isConnecting) "拨通中..." else "拨 打",
 						style = TextStyle(
 							fontFamily = FontFamily.Monospace,
 							fontSize = 18.sp,
