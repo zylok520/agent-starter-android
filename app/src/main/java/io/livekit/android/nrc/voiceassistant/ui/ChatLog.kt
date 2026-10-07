@@ -1,4 +1,4 @@
-package io.livekit.android.example.voiceassistant.ui
+package io.livekit.android.nrc.voiceassistant.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight

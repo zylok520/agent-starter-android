@@ -1,4 +1,4 @@
-package io.livekit.android.example.voiceassistant.ui.anim
+package io.livekit.android.nrc.voiceassistant.ui.anim
 
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.Spring

@@ -1,4 +1,4 @@
-package io.livekit.android.example.voiceassistant.screen
+package io.livekit.android.baidu.voiceassistant.screen
 
 import android.util.Base64
 import androidx.compose.foundation.Image
@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -14,13 +15,20 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import io.livekit.android.example.voiceassistant.R
-import io.livekit.android.example.voiceassistant.tokenEndpoint
+import io.livekit.android.baidu.voiceassistant.R
+import io.livekit.android.baidu.voiceassistant.tokenEndpoint
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -43,28 +51,66 @@ fun ConnectScreen(navigateToVoiceAssistant: (VoiceAssistantRoute) -> Unit) {
     var connecting by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
+    val focusManager = LocalFocusManager.current
+    var passwordVisible by remember { mutableStateOf(false) }
+    val accent = Color(0xFF27AE80)
+    val palette = MaterialTheme.colorScheme
 
-    Box(
-        modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)
-            .imePadding(),
-        contentAlignment = Alignment.Center,
+    BoxWithConstraints(
+        modifier = Modifier.fillMaxSize().background(
+            Brush.verticalGradient(listOf(accent.copy(alpha = 0.12f), palette.background, palette.background))
+        ).safeDrawingPadding().imePadding(),
+        contentAlignment = Alignment.TopCenter,
     ) {
+        val viewportHeight = maxHeight
+        val imageSize = (viewportHeight * 0.38f).coerceIn(220.dp, 340.dp)
         Column(
-            modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(24.dp),
+            modifier = Modifier.widthIn(max = 480.dp).fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .heightIn(min = viewportHeight).padding(horizontal = 24.dp, vertical = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.SpaceBetween,
         ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Surface(color = accent.copy(alpha = 0.12f), shape = RoundedCornerShape(50.dp)) {
+                Text("AI 语音助手", modifier = Modifier.padding(horizontal = 18.dp, vertical = 8.dp),
+                    color = palette.onSurface, style = MaterialTheme.typography.labelLarge)
+            }
+            Spacer(Modifier.height(12.dp))
             Image(
                 painter = painterResource(R.drawable.customer_service),
                 contentDescription = "语音客服",
                 contentScale = ContentScale.Fit,
-                modifier = Modifier.size(180.dp),
+                modifier = Modifier.size(imageSize),
             )
-            Text("登录并开始语音通话", style = MaterialTheme.typography.titleLarge)
+            Text("让交流，更自然", style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold, color = palette.onBackground)
+            Spacer(Modifier.height(8.dp))
+            Text("说出你的想法，助手随时倾听", style = MaterialTheme.typography.bodyMedium,
+                color = palette.onSurfaceVariant, textAlign = TextAlign.Center)
+            Spacer(Modifier.height(32.dp))
+            }
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Surface(
+                modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(28.dp),
+                color = palette.surface, tonalElevation = 2.dp, shadowElevation = 6.dp,
+            ) {
+            Column(modifier = Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            Column {
+                Text("欢迎回来", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                Spacer(Modifier.height(6.dp))
+                Text("登录你的账号，开启专属对话", style = MaterialTheme.typography.bodyMedium,
+                    color = palette.onSurfaceVariant)
+            }
             OutlinedTextField(
                 value = username,
                 onValueChange = { username = it; error = null },
                 label = { Text("账号") },
+                placeholder = { Text("请输入账号") },
+                shape = RoundedCornerShape(16.dp),
+                colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = accent, cursorColor = accent),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
                 singleLine = true,
                 enabled = !connecting,
                 modifier = Modifier.fillMaxWidth(),
@@ -73,19 +119,34 @@ fun ConnectScreen(navigateToVoiceAssistant: (VoiceAssistantRoute) -> Unit) {
                 value = password,
                 onValueChange = { password = it; error = null },
                 label = { Text("密码") },
-                visualTransformation = PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                placeholder = { Text("请输入密码") },
+                shape = RoundedCornerShape(16.dp),
+                colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = accent, cursorColor = accent),
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    TextButton(onClick = { passwordVisible = !passwordVisible }, enabled = !connecting) {
+                        Text(if (passwordVisible) "隐藏" else "显示", color = palette.onSurfaceVariant)
+                    }
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                 singleLine = true,
                 enabled = !connecting,
                 modifier = Modifier.fillMaxWidth(),
             )
-            error?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+            error?.let {
+                Surface(color = palette.errorContainer, shape = RoundedCornerShape(12.dp)) {
+                    Text(it, color = palette.onErrorContainer, modifier = Modifier.padding(12.dp),
+                        style = MaterialTheme.typography.bodySmall)
+                }
+            }
             Button(
                 enabled = !connecting && username.isNotBlank() && password.isNotEmpty(),
-                shape = RoundedCornerShape(30.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF34C759)),
-                modifier = Modifier.fillMaxWidth().height(56.dp),
+                shape = RoundedCornerShape(18.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = accent, contentColor = Color.White),
+                modifier = Modifier.fillMaxWidth().height(60.dp),
                 onClick = {
+                    focusManager.clearFocus()
                     connecting = true
                     error = null
                     val login = username.trim()
@@ -119,7 +180,14 @@ fun ConnectScreen(navigateToVoiceAssistant: (VoiceAssistantRoute) -> Unit) {
                     )
                     Spacer(Modifier.width(12.dp))
                 }
-                Text(if (connecting) "正在验证账号…" else "登录并呼叫")
+                Text(if (connecting) "正在连接…" else "登录并开始通话",
+                    style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+            }
+            }
+            }
+            Spacer(Modifier.height(18.dp))
+            Text("语音交流 · 知识问答 · 办公协助", style = MaterialTheme.typography.labelMedium,
+                color = palette.onSurfaceVariant, textAlign = TextAlign.Center)
             }
         }
     }

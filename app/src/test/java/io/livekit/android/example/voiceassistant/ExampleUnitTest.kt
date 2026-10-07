@@ -1,4 +1,4 @@
-package io.livekit.android.example.voiceassistant
+package io.livekit.android.nrc.voiceassistant
 
 import org.junit.Test
 

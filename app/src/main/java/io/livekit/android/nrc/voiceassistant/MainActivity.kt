@@ -1,4 +1,4 @@
-package io.livekit.android.example.voiceassistant
+package io.livekit.android.nrc.voiceassistant
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,12 +12,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import io.livekit.android.LiveKit
-import io.livekit.android.example.voiceassistant.screen.ConnectRoute
-import io.livekit.android.example.voiceassistant.screen.ConnectScreen
-import io.livekit.android.example.voiceassistant.screen.VoiceAssistantRoute
-import io.livekit.android.example.voiceassistant.screen.VoiceAssistantScreen
-import io.livekit.android.example.voiceassistant.ui.theme.LiveKitVoiceAssistantExampleTheme
-import io.livekit.android.example.voiceassistant.viewmodel.VoiceAssistantViewModel
+import io.livekit.android.nrc.voiceassistant.screen.ConnectRoute
+import io.livekit.android.nrc.voiceassistant.screen.ConnectScreen
+import io.livekit.android.nrc.voiceassistant.screen.VoiceAssistantRoute
+import io.livekit.android.nrc.voiceassistant.screen.VoiceAssistantScreen
+import io.livekit.android.nrc.voiceassistant.ui.theme.LiveKitVoiceAssistantExampleTheme
+import io.livekit.android.nrc.voiceassistant.viewmodel.VoiceAssistantViewModel
 import io.livekit.android.util.LoggingLevel
 
 class MainActivity : ComponentActivity() {

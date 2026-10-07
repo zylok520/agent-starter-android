@@ -1,4 +1,4 @@
-package io.livekit.android.example.voiceassistant.ui
+package io.livekit.android.nrc.voiceassistant.ui
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
@@ -31,7 +31,7 @@ import io.livekit.android.compose.state.Agent
 import io.livekit.android.compose.ui.ScaleType
 import io.livekit.android.compose.ui.VideoTrackView
 import io.livekit.android.compose.ui.audio.VoiceAssistantBarVisualizer
-import io.livekit.android.example.voiceassistant.ui.anim.CircleReveal
+import io.livekit.android.nrc.voiceassistant.ui.anim.CircleReveal
 import kotlin.math.max
 import kotlin.math.roundToInt
 

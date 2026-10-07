@@ -1,11 +1,11 @@
-package io.livekit.android.example.voiceassistant.viewmodel
+package io.livekit.android.nrc.voiceassistant.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
 import io.livekit.android.LiveKit
-import io.livekit.android.example.voiceassistant.screen.VoiceAssistantRoute
+import io.livekit.android.nrc.voiceassistant.screen.VoiceAssistantRoute
 import io.livekit.android.token.TokenSource
 
 class VoiceAssistantViewModel(

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.livekit.android.example.voiceassistant.ui
+package io.livekit.android.nrc.voiceassistant.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource

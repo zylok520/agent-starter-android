@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "io.livekit.android.example.voiceassistant"
+    namespace = "io.livekit.android.nrc.voiceassistant"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "io.livekit.android.example.voiceassistant"
+        applicationId = "io.livekit.android.nrc.voiceassistant"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

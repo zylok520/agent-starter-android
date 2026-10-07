@@ -1,4 +1,4 @@
-package io.livekit.android.example.voiceassistant.ui.theme
+package io.livekit.android.nrc.voiceassistant.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

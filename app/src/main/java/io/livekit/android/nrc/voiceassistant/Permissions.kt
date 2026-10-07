@@ -1,4 +1,4 @@
-package io.livekit.android.example.voiceassistant
+package io.livekit.android.nrc.voiceassistant
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
