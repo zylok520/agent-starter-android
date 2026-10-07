@@ -1,4 +1,4 @@
-package io.livekit.android.baidu.voiceassistant.screen
+package io.livekit.android.nrc.voiceassistant.screen
 
 import android.util.Base64
 import androidx.compose.foundation.Image
@@ -27,8 +27,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import io.livekit.android.baidu.voiceassistant.R
-import io.livekit.android.baidu.voiceassistant.tokenEndpoint
+import io.livekit.android.nrc.voiceassistant.R
+import io.livekit.android.nrc.voiceassistant.tokenEndpoint
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
