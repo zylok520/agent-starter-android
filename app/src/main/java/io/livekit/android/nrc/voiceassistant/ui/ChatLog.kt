@@ -1,10 +1,6 @@
 package io.livekit.android.nrc.voiceassistant.ui
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.background
-import androidx.compose.foundation.shape.RoundedCornerShape
-import io.livekit.android.nrc.voiceassistant.ui.theme.AgentChatText
-import io.livekit.android.nrc.voiceassistant.ui.theme.AgentChatBackground
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -71,8 +67,7 @@ fun ChatLog(room: Room, messages: List<ReceivedMessage>, modifier: Modifier = Mo
                         .padding(16.dp)
                         .animateItem()
                 ) {
-                    if (message.fromParticipant === room.localParticipant ||
-                        (room.localParticipant.identity != null && message.fromParticipant?.identity == room.localParticipant.identity)) {
+                    if (message.fromParticipant?.identity == room.localParticipant.identity) {
                         UserMessage(
                             message = message,
                             modifier = Modifier.align(Alignment.CenterEnd)
@@ -81,10 +76,7 @@ fun ChatLog(room: Room, messages: List<ReceivedMessage>, modifier: Modifier = Mo
                         // Agent transcription or chat message
                         Text(
                             text = message.message,
-                            color = AgentChatText,
                             modifier = Modifier.align(Alignment.CenterStart)
-                                .background(AgentChatBackground, RoundedCornerShape(2.dp, 8.dp, 8.dp, 8.dp))
-                                .padding(8.dp)
                         )
                     }
                 }

@@ -8,8 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import io.livekit.android.nrc.voiceassistant.ui.theme.UserChatText
-import io.livekit.android.nrc.voiceassistant.ui.theme.UserChatBackground
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -41,13 +40,13 @@ fun UserMessage(
         Box(
             modifier = modifier
                 .clip(RoundedCornerShape(8.dp, 2.dp, 8.dp, 8.dp))
-                .background(UserChatBackground)
+                .background(MaterialTheme.colorScheme.surface)
         ) {
             Text(
                 text = message.message,
                 fontWeight = FontWeight.Medium,
                 modifier = Modifier.padding(8.dp),
-                color = UserChatText
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
     }

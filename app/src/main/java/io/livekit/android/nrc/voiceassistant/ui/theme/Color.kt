@@ -18,9 +18,3 @@ val LightLine = Color(0x1FFFFFFF)
 val Blue500 = Color(0xFF002CF2)
 val Indicator = Color(0xFF1FF968)
 val NoVideoBackground = Color(0xFF181818)
-
-// Fixed dark bubbles keep green / pale-blue text readable in both system themes.
-val UserChatText = Color(0xFF86EFAC)
-val UserChatBackground = Color(0xFF153B2A)
-val AgentChatText = Color(0xFFD7E9FF)
-val AgentChatBackground = Color(0xFF233449)
