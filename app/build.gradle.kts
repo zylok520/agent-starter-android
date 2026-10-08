@@ -61,6 +61,8 @@ dependencies {
 
     implementation(libs.livekit.lib)
     implementation(libs.livekit.components)
+    implementation(libs.filament.android)
+    implementation(libs.filament.gltfio)
 
     implementation(libs.accompanist.permissions)
     implementation(libs.androidx.core.ktx)
