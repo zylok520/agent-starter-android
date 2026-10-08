@@ -24,7 +24,7 @@ import io.livekit.android.compose.state.AgentState
 import io.livekit.android.compose.ui.ScaleType
 import io.livekit.android.compose.ui.VideoTrackView
 import io.livekit.android.nrc.voiceassistant.ui.anim.CircleReveal
-import io.livekit.android.nrc.voiceassistant.ui.avatar.FilamentAvatar
+import io.livekit.android.nrc.voiceassistant.ui.avatar.LocalAvatar
 import io.livekit.android.nrc.voiceassistant.ui.avatar.rememberMouthOpening
 
 private val revealSpringSpec = spring<Float>(stiffness = Spring.StiffnessVeryLow)
@@ -54,7 +54,7 @@ fun AgentVisualization(agent: Agent, modifier: Modifier = Modifier) {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
                 ) {
-                    FilamentAvatar(mouthOpening, Modifier.weight(1f).fillMaxWidth())
+                    LocalAvatar(mouthOpening, Modifier.weight(1f).fillMaxWidth())
                     Text(
                         text = when (agent.agentState) {
                             AgentState.SPEAKING -> "正在回答"
