@@ -4,6 +4,14 @@ import android.app.Activity
 import android.content.Context.MEDIA_PROJECTION_SERVICE
 import android.media.projection.MediaProjectionManager
 import android.widget.Toast
+import android.os.Build
+import android.view.WindowManager
+import androidx.activity.compose.BackHandler
+import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.withResumed
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.animateFloatAsState
@@ -94,7 +102,7 @@ fun VoiceAssistant(
     modifier: Modifier = Modifier,
     onEndCall: () -> Unit
 ) {
-    var requestedAudio by remember { mutableStateOf(true) } // Turn on audio by default.
+    var requestedAudio by rememberSaveable { mutableStateOf(true) } // Preserve mute across Activity recreation.
     var requestedVideo by remember { mutableStateOf(false) }
 
     requirePermissions(requestedAudio, requestedVideo)
@@ -110,30 +118,50 @@ fun VoiceAssistant(
     )
 
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val ended by viewModel.ended.collectAsState()
+    val keepScreenOn by viewModel.keepScreenOn.collectAsState()
+    val notificationPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
+
+    LaunchedEffect(canEnableMic) {
+        if (canEnableMic && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            notificationPermission.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+        }
+    }
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_STOP) {
+                requestedVideo = false
+                viewModel.stopVisualMedia()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+    BackHandler { viewModel.endCall() }
+    LaunchedEffect(ended) {
+        if (ended) {
+            viewModel.error.value?.let { Toast.makeText(context, it, Toast.LENGTH_LONG).show() }
+            onEndCall()
+        }
+    }
+    DisposableEffect(keepScreenOn) {
+        val window = (context as? Activity)?.window
+        if (keepScreenOn) window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        else window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        onDispose { window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) }
+    }
 
     SessionScope(session = session) { session ->
 
         // Start the session when we have at least microphone permissions.
         // Permission removals kill the app, so this is a one-way transition.
-        LaunchedEffect(canEnableMic) {
+        LaunchedEffect(canEnableMic, lifecycleOwner) {
             if (!canEnableMic) {
                 return@LaunchedEffect
             }
 
-            val result = session.start()
-
-            // Handle if the session fails to connect.
-            if (result.isFailure) {
-                Toast.makeText(context, "Error connecting to the session.", Toast.LENGTH_SHORT).show()
-                onEndCall()
-            }
-        }
-
-        // End the session when leaving the screen.
-        DisposableEffect(Unit) {
-            onDispose {
-                session.end()
-            }
+            lifecycleOwner.lifecycle.withResumed { viewModel.startCall(session) }
         }
 
         val room = requireRoom()
@@ -157,6 +185,7 @@ fun VoiceAssistant(
 
         // SessionMessages handles all transcriptions and chat messages
         val sessionMessages = rememberSessionMessages()
+        LaunchedEffect(sessionMessages) { viewModel.observeMessages(sessionMessages) }
 
         // Agent provides state information about the agent participant.
         val agent = rememberAgent()
@@ -239,7 +268,7 @@ fun VoiceAssistant(
                 },
                 isChatEnabled = chatVisible,
                 onChatClick = { chatVisible = !chatVisible },
-                onExitClick = onEndCall,
+                onExitClick = { viewModel.endCall() },
                 modifier = Modifier
                     .layoutId(LAYOUT_ID_CONTROL_BAR)
             )
