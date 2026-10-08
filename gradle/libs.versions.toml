@@ -1,7 +1,5 @@
 [versions]
-# Keep both Filament artifacts aligned. 1.76/1.77 require compileSdk 37;
-# 1.68.5 is verified against this project's SDK 36 / AGP 8.13 / JDK 17 setup.
-filament = "1.68.5"
+filament = "1.77.0"
 accompanistPermissions = "0.37.3"
 agp = "8.13.0"
 constraintlayoutCompose = "1.1.1"

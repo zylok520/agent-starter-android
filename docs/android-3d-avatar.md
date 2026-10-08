@@ -1,13 +1,5 @@
 # Filament + GLB 本地 3D 原型
 
-## 构建依赖兼容性修复
-
-Filament 与 gltfio 已统一固定为 **1.68.5**。先前 1.77.0（以及检查过的 1.76.0）发布包声明 `minCompileSdk=37`，导致 SDK 36 / AGP 8.13.0 项目在 `checkReleaseAarMetadata` 失败。无需修改项目 compileSdk、targetSdk 或 JDK 17 CI 配置。
-
-直接检查 Maven Central 的两个 1.68.5 AAR：`minCompileSdk=1`、`minAndroidGradlePluginVersion=1.0.0`、`coreLibraryDesugaringEnabled=false`；其中 class 的最高版本为 61（Java 17）。这些是库发布包的元数据，不代表本项目最低支持 Android API 1；项目 minSdk 仍为 24。
-
-现有 `FilamentAvatarRenderer.kt` 使用两个 1.68.5 AAR 的真实 classes.jar 独立编译通过（JVM target 1.8）。此项验证 API 兼容性，不等于完整 APK 或真机验证。下文 1.77.0 编译记录属于此前的历史验证。
-
 ## AvatarSample_A（当前默认）
 
 默认资源为 `models/avatar-sample-a.glb`（7,135,576 字节），完整身体、原始彩色贴图、双臂下放。模型来自 VRoid 官方样例的公开再分发镜像；来源、哈希和使用条件见 `avatar-source/AvatarSample_A-LICENSE.md`，不适用项目代码许可证。
@@ -44,7 +36,7 @@ Filament 与 gltfio 已统一固定为 **1.68.5**。先前 1.77.0（以及检查
 ## 文件与模型约定
 
 - `ui/avatar/FilamentAvatar.kt`：Compose 与 TextureView 适配、异步模型读取、生命周期及 2D 回退。
-- `ui/avatar/FilamentAvatarRenderer.kt`：Filament 1.68.5、灯光、相机、约 30 FPS 渲染、嘴型和眨眼权重更新。
+- `ui/avatar/FilamentAvatarRenderer.kt`：Filament 1.77.0、灯光、相机、约 30 FPS 渲染、嘴型和眨眼权重更新。
 - `app/src/main/assets/models/prototype-avatar.glb`：项目自有的程序生成卡通半身人物，19 个网格、588,336 字节，无外部贴图。
 - `tools/generate_avatar.py`：仅依赖 Python 标准库的可重复生成脚本。执行 `python tools/generate_avatar.py` 重建模型。
 
