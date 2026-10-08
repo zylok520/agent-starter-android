@@ -1,5 +1,4 @@
 [versions]
-filament = "1.77.0"
 accompanistPermissions = "0.37.3"
 agp = "8.13.0"
 constraintlayoutCompose = "1.1.1"
@@ -18,8 +17,6 @@ timberkt = "1.5.1"
 navigationCompose = "2.9.5"
 
 [libraries]
-filament-android = { module = "com.google.android.filament:filament-android", version.ref = "filament" }
-filament-gltfio = { module = "com.google.android.filament:gltfio-android", version.ref = "filament" }
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
